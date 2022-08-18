@@ -9,6 +9,7 @@ class MyRegister extends StatefulWidget {
 
 class _MyRegisterState extends State<MyRegister> {
 
+
   @override
   Widget build(BuildContext context) {
     return Sizer(builder : (context, orientation, deviceType) {
@@ -157,7 +158,8 @@ class _MyRegisterState extends State<MyRegister> {
                                       borderRadius: BorderRadius.circular(32)),
                                   minimumSize: Size(300, 50),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                },
                                 child: Text("Sign Up",
                                   style: TextStyle(
                                       fontSize: 18, fontWeight: FontWeight.w500

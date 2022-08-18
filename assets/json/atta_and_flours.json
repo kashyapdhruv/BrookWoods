@@ -1,0 +1,11 @@
+{
+  "products":[
+    {
+      "name":"Aashirwad atta",
+      "desc":"5 kg",
+      "price":"472",
+      "image": "images/staples/Atta and flours png/Ashirwad atta.PNG"
+    }
+
+  ]
+}

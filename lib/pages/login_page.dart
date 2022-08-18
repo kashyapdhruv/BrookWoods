@@ -12,18 +12,27 @@ class MyLogin extends StatefulWidget {
 
 class _MyLoginState extends State<MyLogin> {
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final formkey = GlobalKey<FormState>();
+
+  //text controllers
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future signIn() async{
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+  }
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
 
     super.dispose();
   }
 
-  final formkey= GlobalKey<FormState>();
 
   void validate(){
     if (formkey.currentState!.validate()){
@@ -86,27 +95,26 @@ class _MyLoginState extends State<MyLogin> {
                     child: Column(
                       children: [
                         TextFormField(
-                            controller: emailController,
+                            controller: _emailController,
                             decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87),
-                                borderRadius: BorderRadius.circular(25)
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black54),
+                                    borderRadius: BorderRadius.circular(25)
+                                ),
+                                labelStyle: TextStyle(
+                                    color: Colors.grey.shade100,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700),
+                                hintText: "Enter Email",
+                                labelText: "Email",
+                                fillColor: Colors.white38,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(25)
+                                ),
+                                suffixIcon: Icon(CupertinoIcons.person_alt_circle,
+                                  color: Colors.grey.shade200),
                             ),
-                            labelStyle: TextStyle(
-                                color: Colors.grey.shade200,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700),
-                            hintText: "Enter Username",
-                            labelText: "Username",
-                            fillColor: Colors.white38,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25)
-                            ),
-                            suffixIcon: Icon(
-                              CupertinoIcons.person_alt_circle_fill,
-                              color: Colors.grey.shade200,)
-                        ),
                           validator: MultiValidator([
                             RequiredValidator(errorText: 'should not be Empty'),
                             EmailValidator(errorText: 'Enter a Valid Email')
@@ -114,7 +122,7 @@ class _MyLoginState extends State<MyLogin> {
                         ),
                         SizedBox(height: 25),
                         TextFormField(
-                          controller: passwordController,
+                          controller: _passwordController,
                           obscureText: true,
                           decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
@@ -143,25 +151,27 @@ class _MyLoginState extends State<MyLogin> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.symmetric(horizontal: 100),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.green.shade600,
-                                onPrimary: Colors.white,
-                                shadowColor: Colors.greenAccent,
-                                elevation: 3,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(32)),
-                                minimumSize: Size(300, 50),
-                              ),
-                              onPressed: signIn,
+                          child: GestureDetector(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.symmetric(horizontal: 100),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.green.shade600,
+                                  onPrimary: Colors.white,
+                                  shadowColor: Colors.greenAccent,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(32)),
+                                  minimumSize: Size(300, 50),
+                                ),
+                                onPressed: validate,
 
-                              child: Text("Login",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500
-                                ),),
+                                child: Text("Login",
+                                  style: TextStyle(
+                                      fontSize: 20, fontWeight: FontWeight.w500
+                                  ),),
+                              ),
                             ),
                           ),
                         ),
@@ -215,12 +225,7 @@ class _MyLoginState extends State<MyLogin> {
     );
 
   }
-  Future signIn() async{
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    );
-  }
+
 }
 
 

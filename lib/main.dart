@@ -12,6 +12,7 @@ Future main() async {
 
   runApp(MaterialApp(
         debugShowCheckedModeBanner: false,
+        initialRoute: '/nav',
         routes: {
           '/home': (context)=> MyLogin(),
            '/register': (context)=> MyRegister(),
