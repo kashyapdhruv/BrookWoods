@@ -16,7 +16,8 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.blueAccent.shade400,
         centerTitle: true,
         automaticallyImplyLeading: false,
-      ),);
+      ),
+    );
   }
 
 }
