@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sizer/sizer.dart';
-
 
 class MyLogin extends StatefulWidget {
   @override
@@ -11,82 +11,59 @@ class MyLogin extends StatefulWidget {
 }
 
 class _MyLoginState extends State<MyLogin> {
-
-  final formkey = GlobalKey<FormState>();
-
-  //text controllers
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  Future signIn() async{
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-  }
+  final storage = FlutterSecureStorage();
+  var email;
+  bool _obscuretext = true;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmpassController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
 
     super.dispose();
   }
 
+  final formkey = GlobalKey<FormState>();
 
-  void validate(){
-    if (formkey.currentState!.validate()){
+  void validate() {
+    if (formkey.currentState!.validate()) {
       print('Ok');
-    }
-      else {
-        print('error');
+    } else {
+      print('error');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Sizer(builder: (context, orientation, deviceType)
-    {
+    return Sizer(builder: (context, orientation, deviceType) {
       return Container(
         decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage(
-                "assets/shopping-cart-full-food-supermarket-aisle-elevated-view-high-internal-horizontal-composition-63616470.jpg"),
+            image: DecorationImage(
+                image: AssetImage(
+                    "assets/fur1.jpg"),
                 fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken)
-            )
-        ),
+                colorFilter:
+                ColorFilter.mode(Colors.black45, BlendMode.darken))),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Stack(
             children: [
               Padding(
-                padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height*0.4),
+                padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.topCenter,
-                    padding: EdgeInsets.all(5),
-                    child: Text("Golden Store",
-                      style: TextStyle(
-                          fontSize: 50,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.greenAccent.shade700,
-                          fontFamily: 'Lobster'
-                      ),),
-                  ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/front.png'),
-                        alignment: Alignment.topCenter)
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/Brookwoods.png'),
+                          alignment: Alignment.topCenter)),
                 ),
               ),
               SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.only(top: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.57,
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.57,
                       right: 30,
                       left: 30),
                   child: Form(
@@ -95,82 +72,131 @@ class _MyLoginState extends State<MyLogin> {
                     child: Column(
                       children: [
                         TextFormField(
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black54),
-                                    borderRadius: BorderRadius.circular(25)
-                                ),
-                                labelStyle: TextStyle(
-                                    color: Colors.grey.shade100,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700),
-                                hintText: "Enter Email",
-                                labelText: "Email",
-                                fillColor: Colors.white38,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)
-                                ),
-                                suffixIcon: Icon(CupertinoIcons.person_alt_circle,
-                                  color: Colors.grey.shade200),
-                            ),
-                          validator: MultiValidator([
-                            RequiredValidator(errorText: 'should not be Empty'),
-                            EmailValidator(errorText: 'Enter a Valid Email')
-                          ])
-                        ),
-                        SizedBox(height: 25),
-                        TextFormField(
-                          controller: _passwordController,
-                          obscureText: true,
+                          cursorColor: Colors.grey.shade200,
+                          controller: emailController,
                           decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black54),
-                                  borderRadius: BorderRadius.circular(25)
-                              ),
+                                  borderSide: BorderSide(color: Colors.black87),
+                                  borderRadius: BorderRadius.circular(25)),
                               labelStyle: TextStyle(
-                                  color: Colors.grey.shade100,
+                                  color: Colors.grey.shade200,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700),
-                              hintText: "Enter Password",
-                              labelText: "Password",
+                              hintText: "Enter Email",
+                              labelText: "Email",
                               fillColor: Colors.white38,
                               filled: true,
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25)
+                                  borderRadius: BorderRadius.circular(25)),
+                              suffixIcon: Icon(
+                                CupertinoIcons.mail_solid,
+                                color: Colors.grey.shade200,
+                              )),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Email is required";
+                            }
+                            if (!RegExp(
+                                "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                                .hasMatch(value)) {
+                              return 'Please a valid Email';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            email = value;
+                          },
+
+                          // MultiValidator([
+                          //   RequiredValidator(
+                          //       errorText: 'should not be Empty'),
+                          //   EmailValidator(errorText: 'Enter a Valid Email')
+                          // ])
+                        ),
+                        SizedBox(height: 25),
+                        TextFormField(
+                          autocorrect: true,
+                          cursorColor: Colors.grey.shade200,
+                          controller: passwordController,
+                          obscureText: _obscuretext,
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black54),
+                                borderRadius: BorderRadius.circular(25)),
+                            labelStyle: TextStyle(
+                                color: Colors.grey.shade100,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700),
+                            hintText: "Enter Password",
+                            labelText: "Password",
+                            fillColor: Colors.white38,
+                            filled: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25)),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {});
+                                _obscuretext = !_obscuretext;
+                              },
+                              child: Icon(
+                                _obscuretext
+                                    ? CupertinoIcons.eye_fill
+                                    : CupertinoIcons.eye_slash_fill,
+                                color: Colors.grey.shade200,
                               ),
-                              suffixIcon: IconButton(onPressed: () {},
-                                  color: Colors.grey.shade200,
-                                  icon: Icon(CupertinoIcons.eye))
+                            ),
                           ),
-                            validator: MultiValidator([
-                              RequiredValidator(errorText: 'should not be Empty'),
-                              MinLengthValidator(6, errorText: 'Password should be atleast 6 character long')
-                            ])
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Password is required';
+                            }
+                            // if (value.trim().length < 6) {
+                            //   return 'Password must be at least 8 characters in length';
+                            // }
+                            return null;
+                          },
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03),
-                          child: GestureDetector(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.symmetric(horizontal: 100),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.green.shade600,
-                                  onPrimary: Colors.white,
-                                  shadowColor: Colors.greenAccent,
-                                  elevation: 3,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(32)),
-                                  minimumSize: Size(300, 50),
-                                ),
-                                onPressed: validate,
-
-                                child: Text("Login",
-                                  style: TextStyle(
-                                      fontSize: 20, fontWeight: FontWeight.w500
-                                  ),),
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.03),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.symmetric(horizontal: 100),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.grey.shade300,
+                                onPrimary: Colors.black,
+                                shadowColor: Colors.grey.shade600,
+                                elevation: 3,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(32)),
+                                minimumSize: Size(300, 50),
+                              ),
+                              onPressed: () async {
+                                try {
+                                  UserCredential userCredential =
+                                  await FirebaseAuth
+                                      .instance
+                                      .signInWithEmailAndPassword(
+                                      email:
+                                      emailController.text.trim(),
+                                      password: passwordController.text
+                                          .trim());
+                                  await storage.write(
+                                      key: "email",
+                                      value: userCredential.user!.uid);
+                                  Navigator.pushReplacementNamed(
+                                      context, "/nav");
+                                } on FirebaseAuthException catch (e) {
+                                  Fluttertoast.showToast(
+                                      msg: e.toString(),
+                                      gravity: ToastGravity.BOTTOM);
+                                }
+                              },
+                              child: Text(
+                                "Login",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
@@ -179,39 +205,50 @@ class _MyLoginState extends State<MyLogin> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextButton(onPressed: () {
-                              Navigator.pushNamed(context, "/register");
-                            },
-                                child: Text("Sign Up",
-                                  style: TextStyle(
-                                      fontSize: 18
-                                  ),), style: ButtonStyle(
-                                  foregroundColor: MaterialStateProperty.all<
-                                      Color>(Colors.greenAccent.shade700),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/register");
+                                },
+                                child: Text(
+                                  "Sign Up",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                style: ButtonStyle(
+                                  foregroundColor:
+                                  MaterialStateProperty.all<Color>(
+                                      Colors.grey.shade300),
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(15),
-                                        side: BorderSide(color: Colors.greenAccent.shade700)),
-                                  ),)
-                            ),
-                            TextButton(onPressed: () {},
-                                child: Text("Forgot Password",
-                                  style: TextStyle(
-                                      fontSize: 18
-                                  ),), style: ButtonStyle(
-                                  foregroundColor: MaterialStateProperty.all<
-                                      Color>(Colors.greenAccent.shade700),
+                                        side: BorderSide(
+                                            color:
+                                            Colors.grey.shade300)),
+                                  ),
+                                )),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/forgot");
+                                },
+                                child: Text(
+                                  "Forgot Password",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                style: ButtonStyle(
+                                  foregroundColor:
+                                  MaterialStateProperty.all<Color>(
+                                      Colors.grey.shade300),
                                   shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(15),
-                                        side: BorderSide(color: Colors.greenAccent.shade700)),
-                                  ),)
-                            ),
+                                        side: BorderSide(
+                                            color:
+                                            Colors.grey.shade300)),
+                                  ),
+                                )),
                           ],
                         )
-
                       ],
                     ),
                   ),
@@ -221,13 +258,6 @@ class _MyLoginState extends State<MyLogin> {
           ),
         ),
       );
-    }
-    );
-
+    });
   }
-
 }
-
-
-
-

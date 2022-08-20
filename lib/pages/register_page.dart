@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sizer/sizer.dart';
 
 class MyRegister extends StatefulWidget {
@@ -8,16 +10,19 @@ class MyRegister extends StatefulWidget {
 }
 
 class _MyRegisterState extends State<MyRegister> {
-
-
+  var email;
+  bool _obscuretext = true;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Sizer(builder : (context, orientation, deviceType) {
-      return  Container(
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Container(
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(
-                "assets/login 1.jpg",
+                "assets/fur1.jpg",
               ),
               fit: BoxFit.fitHeight,
               alignment: Alignment(0, 0),
@@ -33,151 +38,203 @@ class _MyRegisterState extends State<MyRegister> {
             body: Stack(
               children: [
                 Padding(
-                  padding: EdgeInsets.only( right: 20,top: 80, ),
+                  padding: EdgeInsets.only(
+                    right: 20,
+                    top: 80,
+                  ),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     alignment: Alignment.topRight,
-                      child: Text(
-                        "Create \nAccount",
-                        style: TextStyle(
-                            fontSize: 50,
-                            color: Colors.white70,
-                            fontFamily: 'Lobster'
-                        ),
-                      ),
+                    child: Text(
+                      "Create \nAccount",
+                      style: TextStyle(
+                          fontSize: 50,
+                          color: Colors.brown.shade100,
+                          fontFamily: 'Lobster'),
                     ),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 20, top: 40),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                        image: DecorationImage(scale: 3,
-                            colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcATop),
+                        image: DecorationImage(
+                            scale: 3,
+                            colorFilter: ColorFilter.mode(
+                                Colors.brown.shade100, BlendMode.srcATop),
                             image: AssetImage('assets/form.png'),
-                            alignment: Alignment.topLeft
-                        )
+                            alignment: Alignment.topLeft)),
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.4,
+                        left: 30,
+                        right: 30),
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          cursorColor: Colors.grey.shade200,
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black54),
+                                borderRadius: BorderRadius.circular(25)),
+                            labelStyle: TextStyle(
+                              color: Colors.grey.shade300,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            hintText: "Enter Username",
+                            labelText: "Username",
+                            suffixIcon: Icon(
+                              CupertinoIcons.profile_circled,
+                              color: Colors.grey.shade300,
+                            ),
+                            fillColor: Colors.white38,
+                            filled: true,
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(25)),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        TextFormField(
+                          cursorColor: Colors.grey.shade200,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: emailController,
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black54),
+                                borderRadius: BorderRadius.circular(25)),
+                            labelStyle: TextStyle(
+                                color: Colors.grey.shade300,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700),
+                            hintText: "Enter Email",
+                            labelText: "Email",
+                            fillColor: Colors.white38,
+                            suffixIcon: Icon(
+                              CupertinoIcons.mail,
+                              color: Colors.grey.shade300,
+                            ),
+                            filled: true,
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(25)),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Email is required";
+                            }
+                            if (!RegExp(
+                                "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                                .hasMatch(value)) {
+                              return 'Please a valid Email';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            email = value;
+                          },
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        TextFormField(
+                          cursorColor: Colors.grey.shade200,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: passwordController,
+                          obscureText: _obscuretext,
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black54),
+                                borderRadius: BorderRadius.circular(25)),
+                            labelStyle: TextStyle(
+                                color: Colors.grey.shade300,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700),
+                            hintText: "Enter Password",
+                            labelText: "Password",
+                            fillColor: Colors.white38,
+                            filled: true,
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(25)),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {});
+                                _obscuretext = !_obscuretext;
+                              },
+                              child: Icon(
+                                _obscuretext
+                                    ? CupertinoIcons.eye_fill
+                                    : CupertinoIcons.eye_slash_fill,
+                                color: Colors.grey.shade200,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Password is required';
+                            }
+                            if (value.trim().length < 6) {
+                              return 'Password must be at least 8 characters in length';
+                            }
+                            return null;
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.03),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.symmetric(horizontal: 95),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.brown.shade100,
+                                onPrimary: Colors.black87,
+                                shadowColor: Colors.brown.shade600,
+                                elevation: 3,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(32)),
+                                minimumSize: Size(300, 50),
+                              ),
+                              onPressed: () async {
+                                try {
+                                  await FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                      email: emailController.text.trim(),
+                                      password:
+                                      passwordController.text.trim());
+                                  Navigator.pushReplacementNamed(
+                                      context, "/nav");
+                                } on FirebaseAuthException catch (e) {
+                                  Fluttertoast.showToast(
+                                      msg: e.toString(),
+                                      gravity: ToastGravity.BOTTOM);
+                                }
+                              },
+                              child: Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                  SingleChildScrollView(
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.4,
-                          left: 30,
-                          right: 30),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black54),
-                                  borderRadius: BorderRadius.circular(25)),
-                              labelStyle: TextStyle(
-                                color: Colors.grey.shade300,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              hintText: "Enter Username",
-                              labelText: "Username",
-                              suffixIcon: Icon(
-                                CupertinoIcons.profile_circled,
-                                color: Colors.grey.shade300,
-                              ),
-                              fillColor: Colors.white38,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(25)),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black54),
-                                  borderRadius: BorderRadius.circular(25)),
-                              labelStyle: TextStyle(
-                                  color: Colors.grey.shade300,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700),
-                              hintText: "Enter Email",
-                              labelText: "Email",
-                              fillColor: Colors.white38,
-                              suffixIcon: Icon(
-                                CupertinoIcons.mail,
-                                color: Colors.grey.shade300,
-                              ),
-                              filled: true,
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(25)),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          TextFormField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black54),
-                                  borderRadius: BorderRadius.circular(25)),
-                              labelStyle: TextStyle(
-                                  color: Colors.grey.shade300,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700),
-                              hintText: "Enter Password",
-                              labelText: "Password",
-                              fillColor: Colors.white38,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(25)),
-                              suffixIcon: IconButton(
-                                onPressed: () {},
-                                icon: Icon(CupertinoIcons.eye),
-                                color: Colors.grey.shade300,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.symmetric(horizontal: 95),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.white,
-                                  onPrimary: Colors.black87,
-                                  shadowColor: Colors.white70,
-                                  elevation: 3,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(32)),
-                                  minimumSize: Size(300, 50),
-                                ),
-                                onPressed: () {
-                                },
-                                child: Text("Sign Up",
-                                  style: TextStyle(
-                                      fontSize: 18, fontWeight: FontWeight.w500
-                                  ),),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),
-
-      );
-
-    },
+        );
+      },
     );
   }
 }

@@ -27,33 +27,38 @@ class _NavPage extends State<NavPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: pages[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.shifting,
+      bottomNavigationBar: Container(
+        height: 50,
+        color: Colors.indigo,
+        child: BottomNavigationBar(
+          backgroundColor: Colors.indigoAccent,
+          type: BottomNavigationBarType.fixed,
           selectedLabelStyle: TextStyle(fontSize: 10, color: Colors.white),
-          onTap: onTap,
-          currentIndex: currentIndex,
-          selectedItemColor: Colors.black54,
-          unselectedItemColor: Colors.grey.shade300,
-          showUnselectedLabels: false,
-          showSelectedLabels: true,
-          elevation: 0,
-          items: [
-            BottomNavigationBarItem(
-              backgroundColor: Colors.blueAccent.shade400,
-              icon: Icon(CupertinoIcons.house_fill),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              backgroundColor: Colors.deepPurpleAccent.shade200,
-              label: "Cart",
-              icon: Icon(CupertinoIcons.cart),
-            ),
-            BottomNavigationBarItem(
-              label: "Profile",
-              backgroundColor: Colors.blue.shade400,
-              icon: Icon(CupertinoIcons.person),
-            ),
-          ]),
+    onTap: onTap,
+    currentIndex: currentIndex,
+    selectedItemColor: Colors.black54,
+    unselectedItemColor: Colors.grey.shade300,
+    showUnselectedLabels: false,
+    showSelectedLabels: true,
+    elevation: 0,
+    items: [
+    BottomNavigationBarItem(
+    backgroundColor: Colors.blueAccent.shade400,
+    icon: Icon(CupertinoIcons.house_fill),
+    label: "Home",
+    ),
+    BottomNavigationBarItem(
+    backgroundColor: Colors.deepPurpleAccent.shade200,
+    label: "Cart",
+    icon: Icon(CupertinoIcons.cart),
+    ),
+    BottomNavigationBarItem(
+    label: "Profile",
+    backgroundColor: Colors.blue.shade400,
+    icon: Icon(CupertinoIcons.person),
+    ),
+    ]),
+      )
     );
   }
 }

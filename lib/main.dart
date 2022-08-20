@@ -1,52 +1,52 @@
 import 'package:catalog_app/pages/Navbar/nav_bar.dart';
+import 'package:catalog_app/pages/Navbar/profile_page.dart';
+import 'package:catalog_app/pages/animated_page.dart';
+import 'package:catalog_app/pages/login_page.dart';
 import 'package:catalog_app/pages/register_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:catalog_app/pages/login_page.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  final storage = FlutterSecureStorage();
 
-  runApp(MaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/nav',
-        routes: {
-          '/home': (context)=> MyLogin(),
-           '/register': (context)=> MyRegister(),
-          '/nav': (context)=> NavPage(),
+  Future<bool> checkLoginStatus() async {
+    String? value = await storage.read(key: "uid");
+    if (value == null) {
+      return false;
+    } else
+      return true;
+  }
 
-
-        },
-
-        home: AnimatedSplashScreen(splash: Image.asset('assets/grocery.png'),
-          disableNavigation: false,
-          nextScreen: MyLogin(),
-          splashIconSize: 250,
-          backgroundColor: Colors.indigo.shade700,splashTransition: SplashTransition.slideTransition,
-        animationDuration: Duration(seconds:2),curve:Curves.bounceOut,
-          duration: 1500,),
-
-  ));
-
-}
-class MainPage extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    body: StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return NavPage();
-        }
-        else {
-          return MyLogin();
-        }
+  ;
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/Animated',
+      routes: {
+        '/Animated': (context) => AnimatedPage(),
+        '/Profile': (context) => Profile(),
+        '/home': (context) => MyLogin(),
+        //'/forgot': (context) => ChangePassword(),
+        '/register': (context) => MyRegister(),
+        '/nav': (context) => NavPage(),
       },
-    )
+      home: FutureBuilder(
+          future: checkLoginStatus(),
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.data == false) {
+              return MyLogin();
+            }
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Container(
+                  color: Colors.white,
+                  child: Center(child: CircularProgressIndicator()));
+            }
+            return NavPage();
+          }),
+    ),
   );
 }
-
