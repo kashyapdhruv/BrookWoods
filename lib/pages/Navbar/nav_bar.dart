@@ -2,8 +2,8 @@ import 'package:catalog_app/pages/Navbar/profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'bucket_page.dart';
-import 'home_page.dart';
+import 'cart_page.dart';
+import '../home_page/home_page.dart';
 
 class NavPage extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class NavPage extends StatefulWidget {
 
 class _NavPage extends State<NavPage> {
   final pages = [
-    Home(),
+    HomePage(),
     BucketPage(),
     Profile(),
   ];
@@ -29,15 +29,15 @@ class _NavPage extends State<NavPage> {
       body: pages[currentIndex],
       bottomNavigationBar: Container(
         height: 50,
-        color: Colors.indigo,
+        color: Colors.transparent,
         child: BottomNavigationBar(
-          backgroundColor: Colors.indigoAccent,
+          backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           selectedLabelStyle: TextStyle(fontSize: 10, color: Colors.white),
     onTap: onTap,
     currentIndex: currentIndex,
-    selectedItemColor: Colors.black54,
-    unselectedItemColor: Colors.grey.shade300,
+    selectedItemColor: Colors.indigoAccent,
+    unselectedItemColor: Colors.indigo,
     showUnselectedLabels: false,
     showSelectedLabels: true,
     elevation: 0,
