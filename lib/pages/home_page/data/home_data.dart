@@ -20,7 +20,7 @@ List<Model> sofarec = [
   ),
 
   Model(
-    name: 'Margot Solid Wood',
+    name: 'Margot Solid ',
     image: [
       'sofa/Margot 2 seater.png'
     ],
@@ -220,7 +220,7 @@ List<Model> Seating = [
   ),
   Model(
     name: 'Edina',
-    image: ['eating/Edina B.png'],
+    image: ['seating/Edina B.png'],
     price: '\₹ 15,499',
     description: 'Edina Upholstered Bench In Teal Colour',
 

@@ -12,7 +12,10 @@ class ShowAllWidget extends StatelessWidget {
         child: Text(
           leftText,
           style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Satisfy',
+              color: Colors.indigo.shade800),
         ),
       ),
     );

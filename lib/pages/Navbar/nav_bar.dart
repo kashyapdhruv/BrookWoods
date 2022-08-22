@@ -1,4 +1,5 @@
 import 'package:catalog_app/pages/Navbar/profile_page.dart';
+import 'package:catalog_app/pages/home_page/material/color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,15 +30,15 @@ class _NavPage extends State<NavPage> {
       body: pages[currentIndex],
       bottomNavigationBar: Container(
         height: 50,
-        color: Colors.transparent,
+        color: kPrimaryColor,
         child: BottomNavigationBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: kPrimaryColor,
           type: BottomNavigationBarType.fixed,
           selectedLabelStyle: TextStyle(fontSize: 10, color: Colors.white),
     onTap: onTap,
     currentIndex: currentIndex,
-    selectedItemColor: Colors.indigoAccent,
-    unselectedItemColor: Colors.indigo,
+    selectedItemColor: Colors.white,
+    unselectedItemColor: Colors.white70,
     showUnselectedLabels: false,
     showSelectedLabels: true,
     elevation: 0,
