@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:sizer/sizer.dart';
 
 class MyRegister extends StatefulWidget {
@@ -14,6 +15,24 @@ class _MyRegisterState extends State<MyRegister> {
   bool _obscuretext = true;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmpassController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmpassController.dispose();
+    super.dispose();
+  }
+
+  bool passwordConfirmed() {
+     if (passwordController.text.trim() == confirmpassController.text.trim()){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Sizer(
@@ -40,7 +59,7 @@ class _MyRegisterState extends State<MyRegister> {
                 Padding(
                   padding: EdgeInsets.only(
                     right: 20,
-                    top: 80,
+                    top: 50,
                   ),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
@@ -50,7 +69,7 @@ class _MyRegisterState extends State<MyRegister> {
                       style: TextStyle(
                           fontSize: 50,
                           color: Colors.brown.shade100,
-                          fontFamily: 'Lobster'),
+                          fontFamily: 'Pacifico'),
                     ),
                   ),
                 ),
@@ -75,33 +94,33 @@ class _MyRegisterState extends State<MyRegister> {
                         right: 30),
                     child: Column(
                       children: [
-                        TextFormField(
-                          cursorColor: Colors.grey.shade200,
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black54),
-                                borderRadius: BorderRadius.circular(25)),
-                            labelStyle: TextStyle(
-                              color: Colors.grey.shade300,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            hintText: "Enter Username",
-                            labelText: "Username",
-                            suffixIcon: Icon(
-                              CupertinoIcons.profile_circled,
-                              color: Colors.grey.shade300,
-                            ),
-                            fillColor: Colors.white38,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                                borderRadius: BorderRadius.circular(25)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
+                        // TextFormField(
+                        //   cursorColor: Colors.grey.shade200,
+                        //   decoration: InputDecoration(
+                        //     focusedBorder: OutlineInputBorder(
+                        //         borderSide: BorderSide(color: Colors.black54),
+                        //         borderRadius: BorderRadius.circular(25)),
+                        //     labelStyle: TextStyle(
+                        //       color: Colors.grey.shade300,
+                        //       fontSize: 18,
+                        //       fontWeight: FontWeight.w600,
+                        //     ),
+                        //     hintText: "Enter Username",
+                        //     labelText: "Username",
+                        //     suffixIcon: Icon(
+                        //       CupertinoIcons.profile_circled,
+                        //       color: Colors.grey.shade300,
+                        //     ),
+                        //     fillColor: Colors.white38,
+                        //     filled: true,
+                        //     border: OutlineInputBorder(
+                        //         borderSide: BorderSide(color: Colors.black),
+                        //         borderRadius: BorderRadius.circular(25)),
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   height: 15,
+                        // ),
                         TextFormField(
                           cursorColor: Colors.grey.shade200,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -187,6 +206,44 @@ class _MyRegisterState extends State<MyRegister> {
                             return null;
                           },
                         ),
+                        SizedBox(height: 15,),
+                        TextFormField(
+                          cursorColor: Colors.grey.shade200,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: confirmpassController,
+                          obscureText: _obscuretext,
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black54),
+                                borderRadius: BorderRadius.circular(25)),
+                            labelStyle: TextStyle(
+                                color: Colors.grey.shade300,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700),
+                            hintText: "Enter Password",
+                            labelText: "Confirm Password",
+                            fillColor: Colors.white38,
+                            filled: true,
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.circular(25)),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {});
+                                _obscuretext = !_obscuretext;
+                              },
+                              child: Icon(
+                                _obscuretext
+                                    ? CupertinoIcons.eye_fill
+                                    : CupertinoIcons.eye_slash_fill,
+                                color: Colors.grey.shade200,
+                              ),
+                            ),
+                          ),
+                          validator: MultiValidator([
+                            RequiredValidator(errorText: 'Enter Something'),
+                          ])
+                        ),
                         Padding(
                           padding: EdgeInsets.only(
                               top: MediaQuery.of(context).size.height * 0.03),
@@ -204,7 +261,7 @@ class _MyRegisterState extends State<MyRegister> {
                                 minimumSize: Size(300, 50),
                               ),
                               onPressed: () async {
-                                try {
+                                try  { if (passwordConfirmed()) {
                                   await FirebaseAuth.instance
                                       .createUserWithEmailAndPassword(
                                       email: emailController.text.trim(),
@@ -212,6 +269,7 @@ class _MyRegisterState extends State<MyRegister> {
                                       passwordController.text.trim());
                                   Navigator.pushReplacementNamed(
                                       context, "/nav");
+                                }
                                 } on FirebaseAuthException catch (e) {
                                   Fluttertoast.showToast(
                                       msg: e.toString(),

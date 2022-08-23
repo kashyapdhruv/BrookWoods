@@ -1,4 +1,6 @@
-class Model {
+import 'package:flutter/material.dart';
+
+class Model with ChangeNotifier {
   final String name;
   final String price;
   final String description;

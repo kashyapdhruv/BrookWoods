@@ -25,7 +25,7 @@ class _ProfileState extends State<Profile> {
             onPressed: () async => {
               await Duration(seconds: 5),
               await FirebaseAuth.instance.signOut(),
-              await storage.delete(key: "email"),
+              await storage.delete(key: "uid"),
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(

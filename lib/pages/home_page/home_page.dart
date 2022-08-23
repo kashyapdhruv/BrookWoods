@@ -4,6 +4,7 @@ import 'package:catalog_app/pages/home_page/widgets/show_all_widget.dart';
 import 'package:flutter/material.dart';
 import 'data/home_data.dart';
 import 'data/model.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   AppBar buildAppbar() {
@@ -94,6 +95,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final productData = Provider.of<Models>(context);
+    final sofarec = productData.sofarec;
+
     return DefaultTabController(
       length: 8,
       child: Scaffold(

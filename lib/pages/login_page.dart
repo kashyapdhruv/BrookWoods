@@ -1,3 +1,4 @@
+import 'package:catalog_app/pages/Navbar/nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,13 @@ class MyLogin extends StatefulWidget {
 }
 
 class _MyLoginState extends State<MyLogin> {
+
   final storage = FlutterSecureStorage();
+
   var email;
+
   bool _obscuretext = true;
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmpassController = TextEditingController();
@@ -184,9 +189,11 @@ class _MyLoginState extends State<MyLogin> {
                                           .trim());
                                   await storage.write(
                                       key: "email",
-                                      value: userCredential.user!.uid);
-                                  Navigator.pushReplacementNamed(
-                                      context, "/nav");
+                                      value: userCredential.user?.uid);
+                                  Navigator.pushReplacement(
+                                    context, MaterialPageRoute(
+                                    builder: (context) => NavPage(),)
+                                  );
                                 } on FirebaseAuthException catch (e) {
                                   Fluttertoast.showToast(
                                       msg: e.toString(),
@@ -228,7 +235,7 @@ class _MyLoginState extends State<MyLogin> {
                                 )),
                             TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, "/forgot");
+                                  Navigator.pushNamed(context, "/reset");
                                 },
                                 child: Text(
                                   "Forgot Password",

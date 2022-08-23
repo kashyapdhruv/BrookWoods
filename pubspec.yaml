@@ -48,11 +48,22 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.10.0
+  flutter_native_splash: ^2.2.8
+  provider: ^6.0.3
+  path_provider: ^2.0.11
 
 flutter_icons:
   android: true
   ios: true
-  image_path: 'assets/grocery.png'
+  image_path: 'assets/b_icons.png'
+  adaptive_icon_background: "assets/b_icons_adaptive_back.png"
+  adaptive_icon_foreground: "assets/b_icons_adaptive_fore.png"
+
+
+flutter_native_splash:
+  image: assets/furnitures.png
+  color: "#303F9F"
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
