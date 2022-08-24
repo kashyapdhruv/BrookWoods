@@ -98,6 +98,14 @@ class HomePage extends StatelessWidget {
 
     final productData = Provider.of<Models>(context);
     final sofarec = productData.sofarec;
+    final Seating = productData.Seating;
+    final Chairs = productData.Chairs;
+    final Tables = productData.Tables;
+    final Beds = productData.Beds;
+    final kids = productData.kids;
+    final Outdoor = productData.Outdoor;
+    final bar = productData.bar;
+
 
     return DefaultTabController(
       length: 8,
@@ -323,3 +331,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+

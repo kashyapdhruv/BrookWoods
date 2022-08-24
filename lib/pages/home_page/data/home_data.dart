@@ -659,7 +659,7 @@ class Models with ChangeNotifier {
 
   List<Model> get Chairs => _Chairs;
 
-  List<Model> Tables = [
+  List<Model> _Tables = [
 
     Model(
       name: 'Max',
@@ -819,7 +819,9 @@ class Models with ChangeNotifier {
     ),
   ];
 
-  List<Model> Outdoor = [
+  List<Model> get Tables => _Tables;
+
+  List<Model> _Outdoor = [
 
     Model(
       name: 'Onjle',
@@ -943,7 +945,9 @@ class Models with ChangeNotifier {
     ),
   ];
 
-  List<Model> bar = [
+  List<Model> get Outdoor => _Outdoor;
+
+  List<Model> _bar = [
 
     Model(
       name: 'Segur ',
@@ -1067,7 +1071,9 @@ class Models with ChangeNotifier {
     ),
   ];
 
-  List<Model> kids = [
+  List<Model> get bar => _bar;
+
+  List<Model> _kids = [
 
     Model(
       name: 'McKevin',
@@ -1442,6 +1448,8 @@ class Models with ChangeNotifier {
       description: 'Mickey Sofa with removable cover in Multicolour',
     ),
   ];
+
+  List<Model> get kids => _kids;
 
 
 

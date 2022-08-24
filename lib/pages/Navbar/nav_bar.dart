@@ -14,7 +14,7 @@ class NavPage extends StatefulWidget {
 class _NavPage extends State<NavPage> {
   final pages = [
     HomePage(),
-    BucketPage(),
+    CartProduct(),
     Profile(),
   ];
   int currentIndex = 0;
