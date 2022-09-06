@@ -43,17 +43,14 @@ class CartProduct extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          Container(
-            height: 645,
-            child: ListView.builder(
-                itemCount: cart.items.length,
-                itemBuilder: (context, index) => CartItemTile(
-                  image: cart.items.values.toList()[index].image,
-                  name: cart.items.values.toList()[index].name,
-                  price: cart.items.values.toList()[index].price,
-                  qty: cart.items.values.toList()[index].qty,
-                )),
-          ),
+          ListView.builder(
+              itemCount: cart.items.length,
+              itemBuilder: (context, index) => CartItemTile(
+                image: cart.items.values.toList()[index].image,
+                name: cart.items.values.toList()[index].name,
+                price: cart.items.values.toList()[index].price,
+                qty: cart.items.values.toList()[index].qty,
+              )),
         ],
       ),
     );

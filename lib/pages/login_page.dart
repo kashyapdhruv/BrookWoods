@@ -1,10 +1,9 @@
-import 'package:catalog_app/pages/Navbar/nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sizer/sizer.dart';
+import 'Navbar/nav_bar.dart';
 
 class MyLogin extends StatefulWidget {
   @override
@@ -12,7 +11,6 @@ class MyLogin extends StatefulWidget {
 }
 
 class _MyLoginState extends State<MyLogin> {
-
   final storage = FlutterSecureStorage();
 
   var email;
@@ -47,17 +45,18 @@ class _MyLoginState extends State<MyLogin> {
       return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage(
-                    "assets/fur1.jpg"),
+                image: AssetImage("assets/fur1.jpg"),
                 fit: BoxFit.cover,
                 colorFilter:
                 ColorFilter.mode(Colors.black45, BlendMode.darken))),
         child: Scaffold(
+          resizeToAvoidBottomInset: true,
           backgroundColor: Colors.transparent,
           body: Stack(
             children: [
               Padding(
-                padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.05),
                 child: Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
@@ -77,6 +76,10 @@ class _MyLoginState extends State<MyLogin> {
                     child: Column(
                       children: [
                         TextFormField(
+                          textInputAction: TextInputAction.next,
+
+                          // onEditingComplete: () =>
+                          //     FocusScope.of(context).nextFocus(),
                           cursorColor: Colors.grey.shade200,
                           controller: emailController,
                           decoration: InputDecoration(
@@ -120,6 +123,9 @@ class _MyLoginState extends State<MyLogin> {
                         ),
                         SizedBox(height: 25),
                         TextFormField(
+                          textInputAction: TextInputAction.next,
+                          // onEditingComplete: () =>
+                          //     FocusScope.of(context).nextFocus(),
                           autocorrect: true,
                           cursorColor: Colors.grey.shade200,
                           controller: passwordController,
@@ -154,10 +160,9 @@ class _MyLoginState extends State<MyLogin> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Password is required';
+                            } else if (value.trim().length < 6) {
+                              return 'Password must be at least 8 characters in length';
                             }
-                            // if (value.trim().length < 6) {
-                            //   return 'Password must be at least 8 characters in length';
-                            // }
                             return null;
                           },
                         ),
@@ -191,13 +196,29 @@ class _MyLoginState extends State<MyLogin> {
                                       key: "email",
                                       value: userCredential.user?.uid);
                                   Navigator.pushReplacement(
-                                    context, MaterialPageRoute(
-                                    builder: (context) => NavPage(),)
-                                  );
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => NavPage(),
+                                      ));
                                 } on FirebaseAuthException catch (e) {
-                                  Fluttertoast.showToast(
-                                      msg: e.toString(),
-                                      gravity: ToastGravity.BOTTOM);
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    backgroundColor: Colors.blueGrey.shade300,
+                                    content: Text(
+                                      e.toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(20)),
+                                    duration: Duration(seconds: 3),
+                                    behavior: SnackBarBehavior.floating,
+                                  ));
+
+                                  // Fluttertoast.showToast(
+                                  //     msg: e.toString(),
+                                  //     gravity: ToastGravity.BOTTOM);
                                 }
                               },
                               child: Text(
@@ -229,8 +250,7 @@ class _MyLoginState extends State<MyLogin> {
                                     RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(15),
                                         side: BorderSide(
-                                            color:
-                                            Colors.grey.shade300)),
+                                            color: Colors.grey.shade300)),
                                   ),
                                 )),
                             TextButton(
@@ -250,8 +270,7 @@ class _MyLoginState extends State<MyLogin> {
                                     RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(15),
                                         side: BorderSide(
-                                            color:
-                                            Colors.grey.shade300)),
+                                            color: Colors.grey.shade300)),
                                   ),
                                 )),
                           ],

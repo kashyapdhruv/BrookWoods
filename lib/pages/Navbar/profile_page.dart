@@ -102,10 +102,11 @@ class _ProfileState extends State<Profile> {
               SizedBox(
                 height: 55,
               ),
-              buildTextField("Full Name", "Your name", false),
+              buildTextField("First Name", "Dhruv", false),
+              buildTextField("Second Name", "Kumar", false),
+              buildTextField("D.O.B", "Date of Birth", false),
               buildTextField("E-mail", user.email!, false),
-              buildTextField("Password", "********", true),
-              buildTextField("UID", user.uid, false),
+              // buildTextField("UID", user.uid, false),
               SizedBox(
                 height: 35,
               ),
