@@ -1,23 +1,24 @@
+// ignore_for_file: deprecated_member_use
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../secure_storage.dart';
 import '../login_page.dart';
 
 class Profile extends StatefulWidget {
-  Profile({Key? key}) : super (key: key);
+  Profile({Key? key}) : super(key: key);
 
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-
+  SecureStorage secureStorage = SecureStorage();
   bool showPassword = true;
 
   final user = FirebaseAuth.instance.currentUser!;
 
-  final storage = FlutterSecureStorage();
+  // final storage = FlutterSecureStorage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,15 +27,15 @@ class _ProfileState extends State<Profile> {
         actions: [
           IconButton(
             onPressed: () async => {
-              await Duration(seconds: 5),
-              await FirebaseAuth.instance.signOut(),
-              await storage.delete(key: "uid"),
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyLogin(),
-                  ),
-                      (route) => false),
+              await FirebaseAuth.instance.signOut().whenComplete(
+                      () => secureStorage.deleteSecureData('email').whenComplete(
+                        () => Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyLogin(),
+                        ),
+                            (route) => false),
+                  ))
             },
             tooltip: "Logout",
             icon: Icon(
@@ -74,8 +75,7 @@ class _ProfileState extends State<Profile> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: AssetImage('assets/user img.png'
-                              ))),
+                              image: AssetImage('assets/user img.png'))),
                     ),
                     Positioned(
                         bottom: 0,
@@ -102,11 +102,10 @@ class _ProfileState extends State<Profile> {
               SizedBox(
                 height: 55,
               ),
-              buildTextField("First Name", "Dhruv", false),
-              buildTextField("Second Name", "Kumar", false),
-              buildTextField("D.O.B", "Date of Birth", false),
+              buildTextField("Name", user.displayName.toString(), false),
               buildTextField("E-mail", user.email!, false),
-              // buildTextField("UID", user.uid, false),
+              buildTextField("Password", "********", true),
+              buildTextField("UID", user.uid, false),
               SizedBox(
                 height: 35,
               ),
@@ -114,17 +113,18 @@ class _ProfileState extends State<Profile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20))),
-                      ),
-                      onPressed: () {},
-                      child: Text("CANCEL",
-                          style: TextStyle(
-                              fontSize: 14,
-                              letterSpacing: 2.2,
-                              color: Colors.black)),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20))),
                     ),
+                    onPressed: () {},
+                    child: Text("CANCEL",
+                        style: TextStyle(
+                            fontSize: 14,
+                            letterSpacing: 2.2,
+                            color: Colors.black)),
+                  ),
                   RaisedButton(
                     onPressed: () {},
                     color: Colors.green,
@@ -152,33 +152,33 @@ class _ProfileState extends State<Profile> {
   Widget buildTextField(
       String labelText, String placeholder, bool isPasswordTextField) {
     return Padding(
-        padding: const EdgeInsets.only(bottom: 35.0),
-        child: TextField(
-          obscureText: isPasswordTextField ? showPassword : false,
-          decoration: InputDecoration(
-              suffixIcon: isPasswordTextField
-                  ? IconButton(
-                onPressed: () {
-                  setState(() {
-                    showPassword = !showPassword;
-                  });
-                },
-                icon: Icon(
-                  Icons.remove_red_eye,
-                  color: Colors.grey,
-                ),
-              )
-                  : null,
-              contentPadding: EdgeInsets.only(bottom: 3),
-              labelText: labelText,
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              hintText: placeholder,
-              hintStyle: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              )),
-        ),
+      padding: const EdgeInsets.only(bottom: 35.0),
+      child: TextField(
+        obscureText: isPasswordTextField ? showPassword : false,
+        decoration: InputDecoration(
+            suffixIcon: isPasswordTextField
+                ? IconButton(
+              onPressed: () {
+                setState(() {
+                  showPassword = !showPassword;
+                });
+              },
+              icon: Icon(
+                Icons.remove_red_eye,
+                color: Colors.grey,
+              ),
+            )
+                : null,
+            contentPadding: EdgeInsets.only(bottom: 3),
+            labelText: labelText,
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            hintText: placeholder,
+            hintStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            )),
+      ),
     );
   }
 }

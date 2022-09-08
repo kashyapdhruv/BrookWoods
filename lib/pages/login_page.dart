@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sizer/sizer.dart';
+
+import '../secure_storage.dart';
 import 'Navbar/nav_bar.dart';
 
 class MyLogin extends StatefulWidget {
@@ -20,6 +22,7 @@ class _MyLoginState extends State<MyLogin> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmpassController = TextEditingController();
+  final SecureStorage secureStorage = SecureStorage();
 
   @override
   void dispose() {
@@ -184,6 +187,14 @@ class _MyLoginState extends State<MyLogin> {
                               ),
                               onPressed: () async {
                                 try {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      });
+
                                   UserCredential userCredential =
                                   await FirebaseAuth
                                       .instance
@@ -192,9 +203,16 @@ class _MyLoginState extends State<MyLogin> {
                                       emailController.text.trim(),
                                       password: passwordController.text
                                           .trim());
-                                  await storage.write(
-                                      key: "email",
-                                      value: userCredential.user?.uid);
+                                  await secureStorage.writeSecureData('email',
+                                      userCredential.user!.email.toString());
+                                  secureStorage.writeSecureData(
+                                      'name',
+                                      userCredential.user!.displayName
+                                          .toString());
+                                  // storage.write(
+                                  //     key: "email",
+                                  //     value: userCredential.user?.uid);
+
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -215,7 +233,7 @@ class _MyLoginState extends State<MyLogin> {
                                     duration: Duration(seconds: 3),
                                     behavior: SnackBarBehavior.floating,
                                   ));
-
+                                  Navigator.of(context).pop();
                                   // Fluttertoast.showToast(
                                   //     msg: e.toString(),
                                   //     gravity: ToastGravity.BOTTOM);

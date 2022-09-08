@@ -31,13 +31,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           });
     } on FirebaseAuthException catch (e) {
       print(e);
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(e.message.toString()),
-            );
-          });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.blueGrey.shade300,
+        content: Text(
+          e.toString(),
+          style: TextStyle(fontWeight: FontWeight.w400),
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        duration: Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+      ));
     }
   }
 
@@ -138,7 +141,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     onPressed: PasswordReset,
                     child: Text(
                       textAlign: TextAlign.center,
-                      'Reset Password',
+                      'Reset \nPassword',
                       style:
                       TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                     )),

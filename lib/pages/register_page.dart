@@ -76,7 +76,7 @@ class _MyRegisterState extends State<MyRegister> {
                     height: MediaQuery.of(context).size.height,
                     alignment: Alignment.topCenter,
                     child: Text(
-                      "Create Account",
+                      "Create \nAccount",
                       style: TextStyle(
                           fontSize: 50,
                           color: Colors.brown.shade100,
@@ -248,6 +248,13 @@ class _MyRegisterState extends State<MyRegister> {
                             onPressed: () async {
                               try {
                                 if (passwordConfirmed()) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      });
                                   await FirebaseAuth.instance
                                       .createUserWithEmailAndPassword(
                                       email: emailController.text.trim(),
@@ -270,6 +277,7 @@ class _MyRegisterState extends State<MyRegister> {
                                   duration: Duration(seconds: 1),
                                   behavior: SnackBarBehavior.floating,
                                 ));
+                                Navigator.of(context).pop();
                               }
                             },
                             child: Text(
